@@ -16,6 +16,7 @@ import { getAccessToken, saveAccessToken } from "@/src/api/storage";
 import SplashScreenView from "@/src/components/SplashScreenVIew";
 import { View } from "react-native";
 import { Animated } from "react-native";
+import { CosmeticsProvider } from "@/src/contexts/CosmeticsContext";
 
 
 SplashScreen.preventAutoHideAsync();
@@ -102,10 +103,12 @@ export default function RootLayout() {
           <RecordSymptomProvider>
             <ScanProvider>
               <PostProvider>
+                <CosmeticsProvider>
                 <View style={{flex: 1}}>
                 <Stack screenOptions={{ headerShown: false, animation: 'none' }} />
                 {!isReady && (<Animated.View style={[StyleSheet.absoluteFill,  { opacity: fadeAnim }]}><SplashScreenView /></Animated.View>)}
                 </View>
+                </CosmeticsProvider>
               </PostProvider>
             </ScanProvider>
           </RecordSymptomProvider>
