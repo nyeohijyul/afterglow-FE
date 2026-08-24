@@ -43,7 +43,7 @@ export default function ScanScreen() {
 
     const registeredProductName = scan?.registrationResult?.product.name ?? scan?.productName ?? '';
     // openedDate/usingTime은 info.tsx에서 저장한 한글 라벨(예: '저녁', '1~3개월')을 그대로 사용.
-    const subtitleParts = [registeredProductName, scan?.usingTime, scan?.openedDate ? `개봉 ${scan.openedDate}` : null]
+    const subtitleParts = [scan?.productName, scan?.usingTime, scan?.openedDate ? `개봉: ${scan.openedDate}` : null]
         .filter(Boolean);
 
     const warnings = scan?.registrationResult?.warnings ?? [];

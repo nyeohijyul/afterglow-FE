@@ -34,10 +34,10 @@ const Styles = StyleSheet.create({
 export default function ScanScreen() {
     const scan = useContext(ScanContext);
     // const ingredientsList = scan?.ingredients; // 기존에 선택한 성분 불러오기
-    const ingredientsList = ['세안', '토너', '세럼', '크림', '선크림'];
+    const ingredientsList = ['트라이바이오마', '판테놀', '마데카소사이드'];
     const [selectedIngredients, setSelectedIngredients] = useState<string[]>(ingredientsList);
     // const infoList = ['정제수', '글리세린', '나이아신아마이드', '레**놀', '토코페롤'];
-    const resultText = `정제수, 글리세린, 나이아신아마이드, 레**놀, 토코페롤`
+    const resultText = `트라이바이오마 (프리바이오틱스 복합체)\n+ 판테놀 5% + 마데카소사이드`
     return (
         <>
             <View style={{paddingVertical: 20}}>

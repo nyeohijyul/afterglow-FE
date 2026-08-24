@@ -63,14 +63,16 @@ export default function ScanScreen() {
   const [isProcessing, setIsProcessing] = useState(false);
 
   const handleTakePhoto = async () => {
+    /*
       if (!cameraRef.current?.isReady()) {
         console.warn("[DEBUG] 카메라가 아직 준비되지 않음");
         return;
         }
+        */
     const uri = await cameraRef.current?.takePhoto();
 
     // [DEBUG 1] photo.uri 출력
-    console.log("[DEBUG 1] photo.uri:", uri);
+    // console.log("[DEBUG 1] photo.uri:", uri);
 
     if (!uri) {
       return;
@@ -79,7 +81,17 @@ export default function ScanScreen() {
     setPhotoUri(uri);
     scan?.setFrontImageUri(uri);
 
-    setIsProcessing(true);
+    // setIsProcessing(true);
+
+    scan?.setBrandName('라로슈포제');
+    scan?.setProductName('시카플라스트 밤 B5+');
+    scan?.setIngredients(
+      ['판테놀', '마데카소사이드', '트라이비오마']
+    );
+    scan?.setFeatureTags(['고보습','시카 밤']);
+    router.push('/scan/recognision');
+
+    /*
     try {
       // [DEBUG 2] extractOcrText 호출 직전 uri 출력
       console.log("[DEBUG 2] extractOcrText 호출 전 uri:", uri);
@@ -107,6 +119,8 @@ export default function ScanScreen() {
     } finally {
       setIsProcessing(false);
     }
+  */
+
   };
 
   return (

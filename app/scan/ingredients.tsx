@@ -58,7 +58,8 @@ export default function ScanScreen() {
 
         setPhotoUri(uri);
         scan?.setBackImageUri(uri);
-
+        router.push('/scan/confirm');
+/*
         try {
             const { rawText } = await extractOcrText(uri);
             console.log("[BACK OCR] rawText:", rawText);
@@ -83,6 +84,7 @@ export default function ScanScreen() {
             // OCR 실패하면 기존 fallback 화면으로 이동
             router.push('/scan/fallback');
         }
+            */
     };
     return (
         <>

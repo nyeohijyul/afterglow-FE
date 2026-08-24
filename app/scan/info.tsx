@@ -19,8 +19,9 @@ import {
 } from "@/src/api/vanity";
 import { router } from "expo-router";
 import { useContext, useState } from "react";
-import { Alert, Pressable, ScrollView, StyleSheet, Text } from "react-native";
+import { Alert, ImageSourcePropType, Pressable, ScrollView, StyleSheet, Text } from "react-native";
 import { View } from "react-native";
+import { CosmeticsContext } from "@/src/contexts/CosmeticsContext";
 
 const Styles = StyleSheet.create({
     container: {
@@ -65,6 +66,7 @@ function getPlaceholderOpenedAt(): string {
 
 export default function ScanScreen() {
     const scan = useContext(ScanContext);
+    const cosmeticlist = useContext(CosmeticsContext);
     const openedDateList = ['최근', '1~3개월', '6개월 이상'];
     const usingTimeList = ['아침', '저녁', '둘 다'];
     const [openedDate, setopenedDate] = useState('');
@@ -76,7 +78,24 @@ export default function ScanScreen() {
             return;
         }
 
-        setIsSubmitting(true);
+        // setIsSubmitting(true);
+        
+            scan?.setopenedDate(openedDate);
+            scan?.setusingTime(usingTime);
+            cosmeticlist?.setcosmetics([...cosmeticlist.cosmetics, {
+                id: cosmeticlist.cosmetics.length,
+                frontImageUri: scan?.frontImageUri as ImageSourcePropType,
+                brandName: scan?.brandName ?? '',
+                productName: scan?.productName ?? '',
+                skincareFunction: scan?.skincareFunction ?? '',
+                ingredients: scan?.ingredients ?? [],
+                featureTags: scan?.featureTags ?? [],
+                openedDate: openedDate,
+                usingTime: usingTime
+            }])
+            console.log(cosmeticlist?.cosmetics);
+            router.push('/scan/complete');
+        /*
         try {
             const payload: CreateProductRequest = {
                 name: scan?.productName || '',
@@ -111,6 +130,7 @@ export default function ScanScreen() {
         } finally {
             setIsSubmitting(false);
         }
+            */
     };
 
     return (

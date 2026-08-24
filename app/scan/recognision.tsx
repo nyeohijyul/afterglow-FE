@@ -129,7 +129,7 @@ export default function ScanScreen() {
                         <Text
                             style={[Typography.label.default, {color: Colors.text.secondary}]}
                         >기능 태그</Text>
-                        <View style={{ flexDirection:'row', gap: 8}}>
+                        <View style={{ flexDirection:'row', gap: 8, alignItems: 'center'}}>
                             {tags.map((text, index) => (
                                 <Tag
                                     key={index}
@@ -139,11 +139,11 @@ export default function ScanScreen() {
                                     isLarge={true}
                                 />
                             ))}
-                            <TextInput style={[Styles.tagContainer, {color: Colors.text.secondary}]}
-                            value={currentTagInput} onChangeText={setCurrentTagInput}
-                            textAlignVertical="top"
-                            onSubmitEditing={handleTagInput}
-                            placeholder="+" 
+                            <TextInput style={[Styles.tagContainer, {color: Colors.text.secondary, includeFontPadding: false}]}
+                                value={currentTagInput} onChangeText={setCurrentTagInput}
+                                textAlignVertical="top"
+                                onSubmitEditing={handleTagInput}
+                                placeholder="+" 
                             >
                                 {/* <Text style={Typography.label.default}>+</Text> */}
                             </TextInput>
