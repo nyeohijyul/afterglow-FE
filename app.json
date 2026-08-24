@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "afterglow-FE",
-    "slug": "afterglow-FE",
+    "name": "Afterglow",
+    "slug": "Afterglow",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -14,7 +14,7 @@
     "android": {
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.anonymous.afterglowFE"
+      "package": "com.dasibom.afterglow"
     },
     "web": {
       "output": "static",
