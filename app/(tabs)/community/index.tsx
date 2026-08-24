@@ -12,6 +12,7 @@ import TagButtonList from "@/src/components/TagButtonList";
 import { useFocusEffect } from "@react-navigation/native";
 import Tag from "@/src/components/Tag";
 import SecondaryActionButton from "@/src/components/SecondaryActionButton";
+import { PostContext } from "@/src/contexts/PostContext";
 
 const Styles = StyleSheet.create({
     container: {
@@ -56,9 +57,10 @@ const Styles = StyleSheet.create({
 type PostTypes = {
     id: number
     title: string
-    tags?: Array<string>
-    info: string
+    tags: Array<string>
+    info: string | string[]
     like: number
+    content: string
 }
 
 type PostProp = {
@@ -85,7 +87,7 @@ function Post({ prop }: PostProp) : React.JSX.Element {
                 ))}
             </View>
             <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <Text style={[Typography.secondary.small, {color: Colors.text.muted}]}>{prop.info}</Text>
+                <Text style={[Typography.secondary.small, {color: Colors.text.muted}]}>{typeof prop.info == 'string' ? prop.info : prop.info[0]}</Text>
                 <Text style={[Typography.secondary.small, {color: Colors.text.muted}]}>저도 그래요 {prop.like}</Text>
             </View>
         </Pressable>
@@ -404,27 +406,32 @@ export default function CommunityScreen() {
         );
     };
 
-    const posts : Array<PostTypes> = [
+    const postcontext = useContext(PostContext);
+
+    const posts : Array<PostTypes> = postcontext?.posts ?? [
         {
             id: 0,
             title: '밤에 못 자면 다음날 꼭 가려워요',
             tags: ['가려움', '잠 못 잤을 때'],
             info: '폐경 2년차',
-            like: 14
+            like: 14,
+            content: ''
         },
         {
             id: 1,
             title: '세라마이드 크림으로 버티는 중',
             tags: ['가려움'],
             info: '이행기',
-            like: 9
+            like: 9,
+            content: ''
         },
         {
             id: 2,
             title: '환절기마다 반복돼서 기록 시작했어요',
             tags: ['가려움', '계절·날씨'],
             info: '폐경 4년차',
-            like: 6
+            like: 6,
+            content: ''
         }
     ]
 

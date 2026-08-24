@@ -15,6 +15,7 @@ import ActionButton from "@/src/components/ActionButton";
 import TagButtonList from "@/src/components/TagButtonList";
 import { useFocusEffect } from "@react-navigation/native";
 import { PostContext } from "@/src/contexts/PostContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Styles = StyleSheet.create({
     container: {
@@ -61,6 +62,7 @@ export default function CommunityScreen() {
     const [selectedSymptoms, setselectedSymptoms] = useState<Array<string>>([]);
     const [selectedSituations, setselectedSituations] = useState<Array<string>>([]);
 
+    const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [isChecked, setIsChecked] = useState(false);
 
@@ -108,7 +110,20 @@ export default function CommunityScreen() {
                         setSelection={setselectedSituations}
                     />
                 </View>
-                <View>
+                <View style={{gap: 12}}>
+                    <TextInput
+                        placeholder={"제목을 적어주세요."}
+                        placeholderTextColor={Colors.text.muted}
+                        value={title}
+                        onChangeText={setTitle}
+                        textAlignVertical="top"
+                        style={[Typography.text.default,{
+                            borderWidth: 1, borderStyle: 'solid', borderColor: Colors.border.defaultLight, borderRadius: 16,
+                            paddingVertical: 18, paddingHorizontal: 20,
+                            backgroundColor: Colors.background.card,
+                            includeFontPadding: false
+                        }]}
+                    />
                     <TextInput
                         placeholder="어떤 일이 있었는지 편하게 적어주세요"
                         placeholderTextColor={Colors.text.muted}
@@ -149,11 +164,27 @@ export default function CommunityScreen() {
             <ActionButton
                 text="작성 완료"
                 route={'/(tabs)/community'}
-                onPress={()=>{
+                disabled={!selectedSymptoms.length || !title || !content}
+                onPress={async ()=>{
                     postcontext?.setSymptomTags(selectedSymptoms);
                     postcontext?.setSituationTags(selectedSituations);
                     postcontext?.setContent(content);
                     postcontext?.setIsChecked(isChecked);
+                    if (postcontext?.posts) {
+                        const json = await AsyncStorage.getItem("userData") ?? '{}'
+                        const userData = JSON.parse(json);
+                        const userInfo = userData['period'] ?? '익명';
+                        let key = postcontext.posts.length;
+                        console.log(key)
+                        postcontext.setPosts([...postcontext.posts, {
+                            id: key,
+                            title: title,
+                            tags: [...selectedSymptoms, ...selectedSituations],
+                            info: [isChecked ? '비공개' : userInfo, '방금 전'],
+                            like: 0,
+                            content: content
+                        }])
+                    }
                 }}
             />
         </View>

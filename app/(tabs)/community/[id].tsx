@@ -7,16 +7,16 @@ import { Colors } from "@/src/constants/colors";
 import { Typography } from "@/src/constants/typography";
 import { Image, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from "@/src/contexts/UserContext";
 import HeaderNavigation from "@/src/components/HeaderNavigation";
 import { useFocusEffect } from "@react-navigation/native";
 import Tag from "@/src/components/Tag";
+import { PostContext } from "@/src/contexts/PostContext";
 
 const Styles = StyleSheet.create({
     container: {
         paddingTop: 16,
-        paddingBottom: 14,
         paddingHorizontal: 16,
         flex: 1,
         gap: 16
@@ -132,7 +132,7 @@ function CommentView({comments}: {comments: comment[]}) : React.JSX.Element {
     return (
         <>
             {comments.map((comment, index)=>(
-                <>
+                <View key={index} style={{gap: 12}}>
                 <View key={index} style={{gap: 6}}>
                     <View style={{flexDirection: 'row', gap: 8, alignItems: 'center'}}>
                         {comment.name && <Text style={Typography.label.default}>{comment.name}</Text>}
@@ -143,7 +143,7 @@ function CommentView({comments}: {comments: comment[]}) : React.JSX.Element {
                     </View>
                 </View>
                 {comments.length - 1 != index && <View key={index+'l'} style={Styles.line}></View>}
-                </>
+                </View>
             ))}
         </>
     )
@@ -156,8 +156,11 @@ type comment = {
 }
 
 export default function CommunityScreen() {
+    const {id} = useLocalSearchParams<{id:string}>()
+    const postId = parseInt(id);
+    const postcontext = useContext(PostContext);
     const [reply, setReply] = useState('');
-    const [comments, setComments] = useState<comment[]>([
+    const [comments, setComments] = useState<comment[]>(postId == 0 ? [
         {
             name: '폐경 3년차',
             time: '2일 전',
@@ -173,12 +176,10 @@ export default function CommunityScreen() {
             time: '1일 전',
             reply: '저는 가습기를 틀고부터 아침에 덜 당기더라고요.'
         }
-    ])
+    ]: [])
     const user = useContext(UserContext);
     useFocusEffect(() => user?.setIsReading(true))
-    const {id} = useLocalSearchParams<{id:string}>()
-    const postId = parseInt(id);
-    const getexamplePost = () => ( postId == 0 ? {
+    const getexamplePost = () => (postcontext?.posts[postId] ?? (postId == 0 ? {
             id: 0,
             title: '밤에 못 자면 다음날 꼭 가려워요',
             tags: ['가려움', '잠 못 잤을 때'],
@@ -193,15 +194,16 @@ export default function CommunityScreen() {
             tags: ['가려움'],
             info: ['이행기'],
             like: 9,
-            content: ``
+            content: `안 그랬었는데 요즘 들어 피부가 가려워요.
+세라마이드 크림 바르니까 좀 괜찮아지는 기분... 다른 분들은 어떻게 하시나요?`
         } : {
             id: 2,
             title: '환절기마다 반복돼서 기록 시작했어요',
             tags: ['가려움', '계절·날씨'],
             info: ['폐경 4년차'],
             like: 6,
-            content: ''
-        })
+            content: '피부가 약해져서 그런지 꼭 이맘때 환절기마다 피부가 예민하고 가려워요.'
+        }))
     const post = getexamplePost();
     const [likes, setLikes] = useState(post.like);
     const addComment = () => {
