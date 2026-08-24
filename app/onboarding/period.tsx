@@ -40,6 +40,12 @@ export default function Onboarding() {
         // 1. Context 업데이트
         user?.data.setPeriod(period);
         userData?.setPeriod(period);
+        const userInfo = period == options[1] || period == options[2] ? '이행기' : period == options[3] ? '폐경 1년차' : '이용자'
+        const dataToSave = {
+            age: userData?.age,
+            period: userInfo, // 객체든 문자열이든 알아서 안전하게 JSON 문자열로 변환해 줍니다.
+        };
+        await AsyncStorage.setItem("userData", JSON.stringify(dataToSave))
 
         // 2. 한글 -> Enum 매핑
         const ageRange = user?.data.age ? ageRangeLabelToEnum[user.data.age] : undefined;

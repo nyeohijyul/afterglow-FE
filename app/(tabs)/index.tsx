@@ -11,6 +11,7 @@ import { router } from "expo-router";
 import { useContext } from "react";
 import { UserContext } from "@/src/contexts/UserContext";
 import { RecordSymptomContext } from "@/src/contexts/RecordContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const user = {
     profileImage: false
@@ -108,6 +109,7 @@ function RoutineList({ num, text }: {
 export default function HomeScreen() {
     const user = useContext(UserContext);
     const record = useContext(RecordSymptomContext);
+    const cancelOnboarding = async () => await AsyncStorage.setItem("onboardingCompleted", "false");
 
     return (
             <View style={ Styles.container }>
@@ -131,7 +133,9 @@ export default function HomeScreen() {
                                 <Text style={ Typography.text.accent }>어젯밤 수면</Text>
                             </View>
                             <View style={{ borderRadius: 200, paddingVertical: 2, paddingHorizontal: 8, backgroundColor: Colors.background.card, justifyContent: 'center', alignItems: 'center' }}>
+                                <Pressable onPress={()=>{cancelOnboarding(); router.push('/onboarding')}}>
                                 <Text style={ Typography.secondary.small }>워치 연동</Text>
+                                </Pressable>
                             </View>
                         </View>
                         <View style={ SleepStyles.time }>
