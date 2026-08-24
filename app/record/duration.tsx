@@ -77,6 +77,7 @@ export default function RecordScreen() {
                 <ActionButton
                     text="선택 완료"
                     route={'/record/part'}
+                    disabled={!selected}
                     onPress={() => {
                         user?.recordSymptom.setDuration(selected);
                         record?.setDuration(selected);

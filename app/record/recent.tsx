@@ -70,7 +70,7 @@ export default function RecordScreen() {
             </ScrollView>
             <View style={Styles.buttonContainer}>
                 <ActionButton
-                    text="선택 완료"
+                    text="입력 완료"
                     route={'/record/note'}
                     onPress={()=>{
                         user?.recordSymptom.setRecentProduct(input);

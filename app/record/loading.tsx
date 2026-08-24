@@ -65,6 +65,7 @@ export default function loadingScreen() {
     const user = useContext(UserContext);
     const record = useContext(RecordSymptomContext);
 
+    /*
     useEffect(() => {
         if (!record?.isCompleted || !user) return;
 
@@ -116,6 +117,16 @@ export default function loadingScreen() {
             isCancelled = true;
         };
     }, [record?.isCompleted, user]);
+    */
+    useEffect(() => {
+        if (!user?.recordSymptom.isCompleted) return;
+
+        const timer = setTimeout(() => {
+            router.replace("/result");
+        }, 3000);
+
+        return () => clearTimeout(timer);
+    }, [user?.recordSymptom.isCompleted]);
     
     return (
         <View style={Styles.container}>

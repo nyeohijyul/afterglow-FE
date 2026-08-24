@@ -77,6 +77,7 @@ export default function RecordScreen() {
                 <ActionButton
                     text="선택 완료"
                     route={'/record/recent'}
+                    disabled={!selected}
                     onPress={()=>{
                         user?.recordSymptom.setPart(selected);
                         record?.setPart(selected);
