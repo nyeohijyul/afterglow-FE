@@ -8,7 +8,7 @@ import HeaderNavigation from "@/src/components/HeaderNavigation";
 import IconTag from "@/src/components/IconTag";
 import { Typography } from "@/src/constants/typography";
 import { useState } from "react";
-import { Image, ImageSourcePropType, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Dimensions, Image, ImageSourcePropType, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SvgProps } from "react-native-svg";
 import MorningIcon from '@/assets/icons/morning.svg';
 import NightIcon from '@/assets/icons/night.svg';
@@ -66,6 +66,8 @@ type CardProp = {
 
 function Card({ props } : CardProp
 ) : React.JSX.Element {
+    const { width } = Dimensions.get("window");
+    let imgContainerWidth = Math.ceil(width/3) - 34 - 11;
     return (
         <View
             style={[Styles.cardContainer, { backgroundColor: props.bgColor }]}
@@ -80,24 +82,35 @@ function Card({ props } : CardProp
                 />
             </View>
             <View style={{ flexDirection: 'row' }}>
-                {props.suggestedProducts.map((product, index) => (
-                    <View
-                        key={index}
-                        style={Styles.routineContainer}
-                    >
-                        <View style={Styles.imgContainer}>
-                            {product.imgsource &&
-                            <Image
-                                source={product.imgsource}
-                                style={Styles.img}
-                            />
-                            }
+                {props.suggestedProducts.map((product, index) => {
+                    let imgWidth: number = 0;
+                    let imgHeight: number = 0;
+                    if (product?.imgsource) {
+                        let ratio: number;
+                        const { width, height } = Image.resolveAssetSource(product.imgsource);
+                        ratio = imgContainerWidth / width;
+                        imgWidth = width * ratio;
+                        imgHeight = height * ratio;
+                    }
+                    return (
+                        <View
+                            key={index}
+                            style={Styles.routineContainer}
+                        >
+                            <View style={Styles.imgContainer}>
+                                {product.imgsource &&
+                                <Image
+                                    source={product.imgsource}
+                                    style={[Styles.img, { width: imgWidth, height: imgHeight }]}
+                                />
+                                }
+                            </View>
+                            <Text
+                                style={[Typography.secondary.default, { textAlign: 'center' }]}
+                            >{product.name}</Text>
                         </View>
-                        <Text
-                            style={[Typography.secondary.default, { textAlign: 'center' }]}
-                        >{product.name}</Text>
-                    </View>
-                ))}
+                    )
+                })}
             </View>
         </View>
     )
@@ -125,18 +138,18 @@ export default function ResultScreen() {
         {
             icon: IconSets.morning,
             suggestedProducts: [
-                {name: '약산성 세라마이드 크림', imgsource: null},
-                {name: '저분자 히알루론산 토너', imgsource: null},
-                {name: 'PDRN 펩타이드 앰플', imgsource: null}
+                {name: '약산성 세라마이드 크림', imgsource: require('@/assets/images/morning-1.png')},
+                {name: '브라이트닝 밸런싱 토너', imgsource: require('@/assets/images/morning-2.png')},
+                {name: '브라이트닝 UV 프로텍티브 BB 크림', imgsource: require('@/assets/images/morning-3.png')}
             ],
             bgColor: Colors.sand[100]
         },
         {
             icon: IconSets.night,
             suggestedProducts: [
-                {name: '약산성 세라마이드 크림', imgsource: null},
-                {name: '저분자 히알루론산 토너', imgsource: null},
-                {name: 'PDRN 펩타이드 앰플', imgsource: null}
+                {name: '미나리 진정 수분 크림', imgsource: require('@/assets/images/night-1.png')},
+                {name: '수연 선 플루이드', imgsource: require('@/assets/images/night-2.png')},
+                {name: '보습 미스트 에센스', imgsource: require('@/assets/images/night-3.png')}
             ],
             bgColor: Colors.sand[300]
         }

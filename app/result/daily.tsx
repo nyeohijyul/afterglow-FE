@@ -7,7 +7,7 @@ import BigOptionButton from "@/src/components/BigOptionButton";
 import HeaderNavigation from "@/src/components/HeaderNavigation";
 import IconTag from "@/src/components/IconTag";
 import { Typography } from "@/src/constants/typography";
-import { ComponentType, useState } from "react";
+import { ComponentType, useContext, useState } from "react";
 import { Image, ImageSourcePropType, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import Svg, { Defs, RadialGradient, Rect, Stop, SvgProps } from "react-native-svg";
 import PauseIcon from '@/assets/icons/pause.svg';
@@ -18,6 +18,7 @@ import { Colors } from "@/src/constants/colors";
 import { FlatList, Dimensions } from "react-native";
 import Tag from "@/src/components/Tag";
 import { router } from "expo-router";
+import { RecordSymptomContext } from "@/src/contexts/RecordContext";
 
 type CarouselProp = {
     cards: Array<CardInfo>
@@ -276,7 +277,8 @@ const bgSvgs = {
 };
 
 export default function ResultScreen() {
-    const cards: Array<CardInfo> = [
+    const record = useContext(RecordSymptomContext);
+    const cards: Array<CardInfo> = record?.recentProduct == '앰플' || record?.recentProduct == '고농도 앰플' ? [
         {
             icon: IconSets.pause,
             text: '2주 전부터 쓰신 고농도 앰플을 3일간 멈춰보세요.',
@@ -301,7 +303,25 @@ export default function ResultScreen() {
         },
         {
             icon: IconSets.alert,
-            text: '3일 뒤에도 열감이 있거나 진물이 나면\n피부과에 가보세요!',
+            text: `3일 뒤에도 ${record?.state ?? '열감이 있거나 진물'}이 있다면\n피부과에 가보세요!`,
+            bgSvg: bgSvgs.alertBg
+        }
+    ]
+    :[
+        {
+            icon: IconSets.hand,
+            text: '지금 가지고 계신\n세라마이드 크림을 사용해 보세요.',
+            description: {
+                title: '현재 사용하면 좋은 제품',
+                name: '멀티 세라마이드 크림',
+                tags: [{text: '보습'}, {text: '세라마이드'}],
+                imgsource: require('@/assets/images/hand_example.png')
+            },
+            bgSvg: bgSvgs.suggestBg,
+        },
+        {
+            icon: IconSets.alert,
+            text: `3일 뒤에도 ${record?.state ?? '열감이 있거나 진물'}이 있다면\n피부과에 가보세요!`,
             bgSvg: bgSvgs.alertBg
         }
     ]
@@ -327,16 +347,16 @@ export default function ResultScreen() {
                     style={{ textAlign: 'center' }}
                 >진단이 아닙니다. 최근 7일 기록을 근거로 했습니다.</Text>
                 <View style={{ gap: 10 }}>
-                    <ActionButton text="좋아졌다" route={'/(tabs)'}/>
+                    <ActionButton text="확인" route={'/(tabs)'}/>
                     <Pressable
                         style={Styles.button}
                         onPress={()=>router.replace('/(tabs)/community')}
                     >
                         <Text
-                            style={[Typography.text.accent, { color: '#3D5C80', textAlign: 'center' }]}
-                        >같은 가려움을 겪은 분들의 이야기 12개</Text>
+                            style={[Typography.text.accent, { fontSize: 18, color: '#3D5C80', textAlign: 'center' }]}
+                        >같은 가려움을 겪은 분들의 이야기 확인</Text>
                         <Text
-                            style={[Typography.secondary.small, { color: Colors.text.secondary, textAlign: 'center' }]}
+                            style={[Typography.secondary.small, { fontSize: 12, color: Colors.text.secondary, textAlign: 'center' }]}
                         >같은 피부고민을 겪는 사람들의 이야기를 확인해 보세요.</Text>
                     </Pressable>
                 </View>
